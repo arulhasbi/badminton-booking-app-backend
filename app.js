@@ -10,6 +10,10 @@ const usersRouter = require("./routes/users"); // Import our users router
 const fieldsRouter = require("./routes/fields"); // Import our fields router
 const bookingsRouter = require("./routes/bookings"); // Import our bookings router
 
+const passport = require("passport"); // Passport for authentication
+const session = require("express-session"); // Express session for session management
+require("./config/passport")(passport); // Import our passport configuration
+
 // Setting up port
 // If there's an environment variable for PORT, we'll use that. If not, default to 5000.
 const PORT = process.env.PORT || 5000;
@@ -20,6 +24,17 @@ const app = express();
 // Middleware setup
 app.use(cors()); // Enable CORS with various options
 app.use(express.json()); // Enable parsing of json objects in the body of requests
+
+app.use(
+  session({
+    secret: "secret",
+    resave: false,
+    saveUninitialized: false, // Don't create a session until something is stored
+  })
+);
+
+app.use(passport.initialize()); // Initialize passport
+app.use(passport.session()); // Enable persistent login sessions
 
 app.use("/users", usersRouter); // Use our users router for all routes starting with /users
 app.use("/fields", fieldsRouter); // Use our fields router for all routes starting with /fields

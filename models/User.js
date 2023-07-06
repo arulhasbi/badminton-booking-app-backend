@@ -2,18 +2,24 @@ const mongoose = require("mongoose");
 
 // Define the schema
 const UserSchema = new mongoose.Schema({
-  name: {
+  googleId: {
     type: String,
     required: true,
   },
-  email: {
+  displayName: {
     type: String,
     required: true,
-    unique: true,
   },
-  password: {
+  firstName: {
     type: String,
     required: true,
+  },
+  lastName: {
+    type: String,
+    required: true,
+  },
+  image: {
+    type: String,
   },
   // Add any additional fields you might need for your user model
 });
