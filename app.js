@@ -22,7 +22,12 @@ const PORT = process.env.PORT || 5000;
 const app = express();
 
 // Middleware setup
-app.use(cors()); // Enable CORS with various options
+app.use(
+  cors({
+    origin: "http://localhost:3000",
+    credentials: true,
+  })
+); // Enable CORS with various options
 app.use(express.json()); // Enable parsing of json objects in the body of requests
 
 app.use(
