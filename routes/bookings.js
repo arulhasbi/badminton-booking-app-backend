@@ -12,7 +12,7 @@ router.get("/", async (req, res) => {
   }
 });
 
-// Route for booking a field
+// Route for booking a court
 router.post("/", async (req, res) => {
   try {
     const newBooking = new Booking(req.body);

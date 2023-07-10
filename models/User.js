@@ -21,7 +21,7 @@ const UserSchema = new mongoose.Schema({
   image: {
     type: String,
   },
-  // Add any additional fields you might need for your user model
+  // Add any additional courts you might need for your user model
 });
 
 // Create the model from the schema and export it

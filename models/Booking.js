@@ -7,20 +7,31 @@ const BookingSchema = new mongoose.Schema({
     ref: "User",
     required: true,
   },
-  field: {
+  reservation: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "Field",
-    required: true,
+    ref: "Reservation",
   },
-  booking_date: {
-    type: Date,
-    required: true,
-  },
-  time_slot: {
+  payment_status: {
     type: String,
+    enum: ["pending", "completed", "failed", "refunded"],
+    default: "pending",
+  },
+  payment_method: {
+    type: String,
+    enum: ["credit_card", "paypal", "bank_transfer"],
     required: true,
   },
-  // Add any additional fields you might need for your user model
+  payment_details: {
+    type: mongoose.Schema.Types.Mixed,
+  },
+  created_at: {
+    type: Date,
+    default: Date.now,
+  },
+  updated_at: {
+    type: Date,
+    default: Date.now,
+  },
 });
 
 // Create the model from the schema and export it
