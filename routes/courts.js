@@ -4,11 +4,21 @@ const Court = require("../models/Court");
 
 // Route for getting a list of all the courts
 router.get("/", async (req, res) => {
+  const page = parseInt(req.query.page) || 1; // default to page 1 if not provided
+  const limit = parseInt(req.query.limit) || 6; // default to 10 items per page if not provided
+  const skip = (page - 1) * limit;
+
   try {
-    const courts = await Court.find({});
-    res.status(200).json(courts);
-  } catch (error) {
-    res.status(500).json({ message: error.message });
+    const total = await Court.countDocuments();
+    const courts = await Court.find().skip(skip).limit(limit);
+    res.status(200).json({
+      total,
+      page,
+      pages: Math.ceil(total / limit),
+      data: courts,
+    });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
   }
 });
 

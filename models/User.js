@@ -1,28 +1,42 @@
 const mongoose = require("mongoose");
 
-// Define the schema
 const UserSchema = new mongoose.Schema({
-  googleId: {
+  email: {
     type: String,
     required: true,
+    unique: true,
+  },
+  googleId: {
+    type: String,
+    required: false,
   },
   displayName: {
     type: String,
-    required: true,
-  },
-  firstName: {
-    type: String,
-    required: true,
-  },
-  lastName: {
-    type: String,
-    required: true,
+    required: false,
   },
   image: {
     type: String,
+    required: false,
   },
-  // Add any additional courts you might need for your user model
+  fullName: {
+    type: String,
+    required: false,
+  },
+  whatsapp: {
+    type: String,
+    required: false,
+  },
+  password: {
+    type: String,
+    required: false,
+  },
+  isVerified: {
+    type: Boolean,
+    default: false,
+  },
+  emailToken: {
+    type: String,
+  },
 });
 
-// Create the model from the schema and export it
 module.exports = mongoose.model("User", UserSchema);

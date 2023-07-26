@@ -4,7 +4,6 @@ const TimeSlotSchema = new mongoose.Schema({
   hourRange: {
     type: String,
     required: true,
-    unique: true,
   },
 });
 

@@ -1,6 +1,7 @@
-const GoogleStrategy = require("passport-google-oauth20").Strategy;
-const mongoose = require("mongoose");
 const User = require("../models/User");
+const mongoose = require("mongoose");
+const GoogleStrategy = require("passport-google-oauth20").Strategy;
+const JwtStrategy = require("passport-jwt").Strategy;
 
 module.exports = function (passport) {
   passport.use(
@@ -8,14 +9,12 @@ module.exports = function (passport) {
       {
         clientID: process.env.GOOGLE_CLIENT_ID,
         clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-        callbackURL: "http://localhost:5000/users/google/callback",
+        callbackURL: "http://localhost:8080/users/google/callback",
       },
       async (accessToken, refreshToken, profile, done) => {
         const newUser = {
           googleId: profile.id,
           displayName: profile.displayName,
-          firstName: profile.name.givenName,
-          lastName: profile.name.familyName,
           image: profile.photos[0].value,
         };
 
@@ -35,8 +34,32 @@ module.exports = function (passport) {
     )
   );
 
-  passport.serializeUser((user, done) => done(null, user.id));
+  passport.use(
+    new JwtStrategy(
+      {
+        jwtFromRequest: function (req) {
+          var token = null;
+          if (req && req.cookies) {
+            token = req.cookies["token"];
+          }
+          return token;
+        },
+        secretOrKey: process.env.JWT_SECRET,
+      },
+      (jwt_payload, done) => {
+        User.findById(jwt_payload.id)
+          .then((user) => {
+            if (user) {
+              return done(null, user);
+            }
+            return done(null, false);
+          })
+          .catch((err) => console.log(err));
+      }
+    )
+  );
 
+  passport.serializeUser((user, done) => done(null, user.id));
   passport.deserializeUser(async (id, done) => {
     try {
       const user = await User.findById(id);
